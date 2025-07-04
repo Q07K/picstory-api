@@ -103,12 +103,12 @@ async def login(
             headers={"WWW-Authenticate": "Bearer"},
         )
 
-    token = create_tokens(user=user)
+    tokens = create_tokens(user=user)
 
     return SuccessResponse[Token](
         code="user.logged_in",
         message="User successfully logged in",
-        data=token.model_dump(),
+        data=tokens,
     )
 
 
@@ -146,12 +146,12 @@ async def login_json(
             headers={"WWW-Authenticate": "Bearer"},
         )
 
-    token = create_tokens(user=user)
+    tokens = create_tokens(user=user)
 
     return SuccessResponse[Token](
         code="user.logged_in",
         message="User successfully logged in",
-        data=token.model_dump(),
+        data=tokens,
     )
 
 
