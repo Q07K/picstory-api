@@ -2,12 +2,8 @@ from datetime import datetime, timedelta, timezone
 
 import bcrypt
 from jose import jwt
-from passlib.context import CryptContext
 
 from app.config import settings
-
-# 패스워드 해싱 설정
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
