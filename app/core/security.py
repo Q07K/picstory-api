@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta, timezone
 
 import bcrypt
-from jose import jwt
+from jose import JWTError, jwt
 
 from app.config import settings
 
@@ -52,9 +52,40 @@ def get_password_hash(password: str) -> str:
     return hashed.decode(encoding="utf-8")
 
 
+def verify_token(token: str, token_type: str = None) -> dict | None:
+    """JWT 토큰을 검증하고 페이로드를 반환합니다.
+
+    Parameters
+    ----------
+    token : str
+        검증할 JWT 토큰.
+    token_type : str, optional
+        토큰 타입 ('access' 또는 'refresh').
+
+    Returns
+    -------
+    dict | None
+        토큰이 유효하면 페이로드를 반환하고, 그렇지 않으면 None을 반환.
+    """
+    try:
+        payload = jwt.decode(
+            token=token,
+            key=settings.secret_key,
+            algorithms=[settings.algorithm],
+        )
+
+        # 토큰 타입 검증
+        if token_type and payload.get("type") != token_type:
+            return None
+
+        return payload
+    except JWTError:
+        return None
+
+
 def create_token(
     data: dict,
-    expires_delta: timedelta | None = None,
+    expires_delta: timedelta,
 ) -> str:
     """JWT 토큰을 생성합니다.
 
@@ -73,10 +104,7 @@ def create_token(
     to_encode = data.copy()
 
     expire = datetime.now(tz=timezone.utc)
-    if expires_delta:
-        expire += expires_delta
-    else:
-        expire += timedelta(minutes=settings.access_token_expire_minutes)
+    expire += expires_delta
 
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(
