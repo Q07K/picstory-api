@@ -6,9 +6,6 @@ from passlib.context import CryptContext
 
 from app.config import settings
 
-# 패스워드 해싱 설정
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     """일반 비밀번호와 해시된 비밀번호가 일치하는지 확인합니다.
