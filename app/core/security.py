@@ -20,10 +20,15 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
     -------
     bool
         비밀번호가 일치하면 True, 그렇지 않으면 False.
+
+    Raises
+    ------
+    ValueError
+        해시된 비밀번호 형식이 올바르지 않은 경우.
     """
     return bcrypt.checkpw(
-        password=bytes(plain_password, encoding="utf-8"),
-        hashed_password=bytes(hashed_password, encoding="utf-8"),
+        password=plain_password.encode(encoding="utf-8"),
+        hashed_password=hashed_password.encode(encoding="utf-8"),
     )
 
 
@@ -38,12 +43,13 @@ def get_password_hash(password: str) -> str:
     Returns
     -------
     str
-        해시된 비밀번호.
+        해시된 비밀번호 (문자열 형태).
     """
-    return bcrypt.hashpw(
-        password=bytes(password, encoding="utf-8"),
+    hashed = bcrypt.hashpw(
+        password=password.encode(encoding="utf-8"),
         salt=bcrypt.gensalt(),
     )
+    return hashed.decode(encoding="utf-8")
 
 
 def create_token(
