@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta, timezone
 
+import bcrypt
 from jose import jwt
 from passlib.context import CryptContext
 
@@ -24,7 +25,10 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
     bool
         비밀번호가 일치하면 True, 그렇지 않으면 False.
     """
-    return pwd_context.verify(secret=plain_password, hash=hashed_password)
+    return bcrypt.checkpw(
+        password=bytes(plain_password, encoding="utf-8"),
+        hashed_password=bytes(hashed_password, encoding="utf-8"),
+    )
 
 
 def get_password_hash(password: str) -> str:
@@ -40,7 +44,10 @@ def get_password_hash(password: str) -> str:
     str
         해시된 비밀번호.
     """
-    return pwd_context.hash(secret=password)
+    return bcrypt.hashpw(
+        bytes(password, encoding="utf-8"),
+        bcrypt.gensalt(),
+    )
 
 
 def create_token(
