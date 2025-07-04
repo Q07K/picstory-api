@@ -46,7 +46,7 @@ async def register(
     if existing_user:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Username already registered",
+            detail="Email already registered",
         )
 
     hashed_password = get_password_hash(password=data.password)

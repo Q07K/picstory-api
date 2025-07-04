@@ -40,10 +40,11 @@ def authenticate_user(
         return None
 
     try:
-        verify_password(
+        if not verify_password(
             plain_password=password,
             hashed_password=user.hashed_password,
-        )
+        ):
+            return None
         return user
 
     except ValueError:
