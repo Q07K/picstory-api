@@ -67,13 +67,13 @@ def create_token(
     if expires_delta:
         expire += expires_delta
     else:
-        expire += timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+        expire += timedelta(minutes=settings.access_token_expire_minutes)
 
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(
         claims=to_encode,
-        key=settings.SECRET_KEY,
-        algorithm=settings.ALGORITHM,
+        key=settings.secret_key,
+        algorithm=settings.algorithm,
     )
     return encoded_jwt
 
