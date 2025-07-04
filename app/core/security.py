@@ -4,7 +4,7 @@ import bcrypt
 from jose import jwt
 from passlib.context import CryptContext
 
-from ..config import settings
+from app.config import settings
 
 # 패스워드 해싱 설정
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -45,8 +45,8 @@ def get_password_hash(password: str) -> str:
         해시된 비밀번호.
     """
     return bcrypt.hashpw(
-        bytes(password, encoding="utf-8"),
-        bcrypt.gensalt(),
+        password=bytes(password, encoding="utf-8"),
+        salt=bcrypt.gensalt(),
     )
 
 
