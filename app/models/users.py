@@ -46,5 +46,5 @@ class UserModel(Base):
     )
     updated_at = Column(
         TIMESTAMP(timezone=True),
-        onupdate=func.now(),
+        server_default=func.now(),
     )
