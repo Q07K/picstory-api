@@ -24,7 +24,6 @@ router = APIRouter(prefix="/v1/auth", tags=["authentication"])
     path="/register",
     response_model=SuccessResponse[UserBase],
     summary="Register a new user",
-    description="Create a new user account with username, email, and password",
     responses={
         200: {"description": "User successfully registered"},
         400: {"description": "Username already registered"},
@@ -75,7 +74,6 @@ async def register(
     path="/login",
     response_model=SuccessResponse[Token],
     summary="User login with OAuth2",
-    description="Authenticate user with email and password using OAuth2 form data",
     responses={
         200: {"description": "User successfully logged in"},
         401: {"description": "Incorrect email or password"},
@@ -118,7 +116,6 @@ async def login(
     path="/login-json",
     response_model=SuccessResponse[Token],
     summary="User login with JSON data",
-    description="Authenticate user with email and password using JSON request body",
     responses={
         200: {"description": "User successfully logged in"},
         401: {"description": "Incorrect email or password"},
@@ -162,7 +159,6 @@ async def login_json(
     path="/refresh-token",
     response_model=SuccessResponse[Token],
     summary="Refresh access token",
-    description="Generate new access and refresh tokens using a valid refresh token",
     responses={
         200: {"description": "Token successfully refreshed"},
         401: {"description": "Invalid or expired refresh token"},
