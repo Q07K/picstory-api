@@ -3,7 +3,7 @@ from pydantic import BaseModel, Field
 
 class UserBase(BaseModel):
     username: str = Field(default=..., description="사용자 이름")
-    email: str = Field(default=None, description="사용자 이메일")
+    email: str = Field(default=..., description="사용자 이메일")
 
 
 class UserCreate(UserBase):
