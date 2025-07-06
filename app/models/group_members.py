@@ -2,11 +2,13 @@
 
 import uuid
 
-from sqlalchemy import ForeignKey, String, TIMESTAMP, func
+from sqlalchemy import Enum as SQLEnum
+from sqlalchemy import ForeignKey, TIMESTAMP, func
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.database.database import Base
+from app.enums import GroupRole
 
 
 # pylint:disable=not-callable, too-few-public-methods
@@ -26,10 +28,10 @@ class GroupMembersModel(Base):
         primary_key=True,
         index=True,
     )
-    role: Mapped[str] = mapped_column(
-        String(length=50),
+    role: Mapped[GroupRole] = mapped_column(
+        SQLEnum(GroupRole),
         nullable=False,
-        default="member",
+        default=GroupRole.MEMBER,
     )
     joined_at: Mapped[TIMESTAMP] = mapped_column(
         TIMESTAMP(timezone=True),
