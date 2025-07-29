@@ -2,7 +2,7 @@
 
 import uuid
 
-from sqlalchemy import ForeignKey, String, TIMESTAMP, Text, func
+from sqlalchemy import ForeignKey, Integer, String, TIMESTAMP, Text, func
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -32,12 +32,18 @@ class PostModel(Base):
         nullable=False,
         index=True,
     )
-    title: Mapped[str] = mapped_column(
-        String(length=255),
-        nullable=False,
+    challenge_id: Mapped[uuid.UUID | None] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("challenges.id"),
+        nullable=True,
+        index=True,
     )
     content: Mapped[str] = mapped_column(
         Text,
+        nullable=False,
+    )
+    image_url: Mapped[str] = mapped_column(
+        String(length=2048),
         nullable=False,
     )
     created_at: Mapped[TIMESTAMP] = mapped_column(
@@ -55,3 +61,7 @@ class PostModel(Base):
     group = relationship(argument="GroupModel", back_populates="posts")
     likes = relationship(argument="LikeModel", back_populates="post")
     comments = relationship(argument="CommentModel", back_populates="post")
+    challenge = relationship(argument="ChallengeModel", back_populates="posts")
+    challenge_winner = relationship(
+        argument="ChallengeWinnerModel", back_populates="post", uselist=False
+    )
