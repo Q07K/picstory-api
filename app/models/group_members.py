@@ -2,9 +2,9 @@
 
 import uuid
 
-from sqlalchemy import ForeignKey, String, TIMESTAMP, func
+from sqlalchemy import Enum, ForeignKey, TIMESTAMP, func
 from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database.database import Base
 
@@ -27,11 +27,21 @@ class GroupMembersModel(Base):
         index=True,
     )
     role: Mapped[str] = mapped_column(
-        String(length=50),
+        Enum("ADMIN", "MEMBER", name="group_role"),
         nullable=False,
-        default="member",
+        default="MEMBER",
     )
     joined_at: Mapped[TIMESTAMP] = mapped_column(
         TIMESTAMP(timezone=True),
         server_default=func.now(),
+    )
+
+    # Relationships
+    user = relationship(
+        argument="UserModel",
+        back_populates="group_memberships",
+    )
+    group = relationship(
+        argument="GroupModel",
+        back_populates="members",
     )
