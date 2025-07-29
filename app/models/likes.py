@@ -14,22 +14,16 @@ class LikeModel(Base):
     """database likes Model(Entity)"""
 
     __tablename__ = "likes"
-    id: Mapped[uuid.UUID] = mapped_column(
+    user_id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True),
+        ForeignKey("users.id"),
         primary_key=True,
-        default=uuid.uuid4,
         index=True,
     )
     post_id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True),
         ForeignKey("posts.id"),
-        nullable=False,
-        index=True,
-    )
-    user_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True),
-        ForeignKey("users.id"),
-        nullable=False,
+        primary_key=True,
         index=True,
     )
     created_at: Mapped[TIMESTAMP] = mapped_column(
