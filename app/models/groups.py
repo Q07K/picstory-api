@@ -3,7 +3,7 @@
 # pylint:disable=not-callable, too-few-public-methods
 import uuid
 
-from sqlalchemy import ForeignKey, String, TIMESTAMP, Text, func
+from sqlalchemy import Enum, ForeignKey, String, TIMESTAMP, Text, func
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -37,6 +37,11 @@ class GroupModel(Base):
         nullable=True,
         default=None,
     )
+    type: Mapped[str] = mapped_column(
+        Enum("PUBLIC", "PRIVATE", name="group_type"),
+        nullable=False,
+        default="PUBLIC",
+    )
     created_at: Mapped[TIMESTAMP] = mapped_column(
         TIMESTAMP(timezone=True),
         server_default=func.now(),
@@ -51,12 +56,17 @@ class GroupModel(Base):
     creator = relationship(
         argument="UserModel",
         back_populates="created_groups",
+        foreign_keys=[creator_id],
     )
     posts = relationship(
         argument="PostModel",
         back_populates="group",
     )
-    invitation_codes = relationship(
-        argument="InvitationCode",
+    invitations = relationship(
+        argument="InvitationModel",
+        back_populates="group",
+    )
+    members = relationship(
+        argument="GroupMembersModel",
         back_populates="group",
     )
