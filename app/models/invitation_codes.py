@@ -1,8 +1,8 @@
-"""invitation codes model(entity)"""
+"""invitations model(entity)"""
 
 import uuid
 
-from sqlalchemy import ForeignKey, INT, TIMESTAMP, func
+from sqlalchemy import ForeignKey, Integer, String, TIMESTAMP, func
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -10,14 +10,13 @@ from app.database.database import Base
 
 
 # pylint:disable=not-callable, too-few-public-methods
-class InvitationCode(Base):
-    """database invitation codes Model(Entity)"""
+class InvitationModel(Base):
+    """database invitations Model(Entity)"""
 
-    __tablename__ = "invitation_codes"
-    code: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True),
+    __tablename__ = "invitations"
+    code: Mapped[str] = mapped_column(
+        String(length=255),
         primary_key=True,
-        default=uuid.uuid4,
         index=True,
     )
     group_id: Mapped[uuid.UUID] = mapped_column(
@@ -32,18 +31,16 @@ class InvitationCode(Base):
         nullable=False,
         index=True,
     )
-    expired_at: Mapped[TIMESTAMP] = mapped_column(
+    expires_at: Mapped[TIMESTAMP | None] = mapped_column(
         TIMESTAMP(timezone=True),
-        nullable=False,
-        index=True,
+        nullable=True,
     )
-    max_uses: Mapped[int] = mapped_column(
-        INT,
-        nullable=False,
-        default=3,
+    max_uses: Mapped[int | None] = mapped_column(
+        Integer,
+        nullable=True,
     )
-    current_uses: Mapped[int] = mapped_column(
-        INT,
+    use_count: Mapped[int] = mapped_column(
+        Integer,
         nullable=False,
         default=0,
     )
@@ -51,16 +48,11 @@ class InvitationCode(Base):
         TIMESTAMP(timezone=True),
         server_default=func.now(),
     )
-    updated_at: Mapped[TIMESTAMP] = mapped_column(
-        TIMESTAMP(timezone=True),
-        server_default=func.now(),
-        onupdate=func.now(),
-    )
 
     # Relationships
     group = relationship(
         argument="GroupModel",
-        back_populates="invitation_codes",
+        back_populates="invitations",
     )
     creator = relationship(
         argument="UserModel",
