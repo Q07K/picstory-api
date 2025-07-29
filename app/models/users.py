@@ -2,7 +2,7 @@
 
 import uuid
 
-from sqlalchemy import String, TIMESTAMP, func
+from sqlalchemy import ForeignKey, String, TIMESTAMP, func
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -41,6 +41,12 @@ class UserModel(Base):
         nullable=True,
         default=None,
     )
+    default_group_id: Mapped[uuid.UUID | None] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("groups.id"),
+        nullable=True,
+        index=True,
+    )
     created_at: Mapped[TIMESTAMP] = mapped_column(
         TIMESTAMP(timezone=True),
         server_default=func.now(),
@@ -55,6 +61,11 @@ class UserModel(Base):
     created_groups = relationship(
         argument="GroupModel",
         back_populates="creator",
+        foreign_keys="GroupModel.creator_id",
+    )
+    default_group = relationship(
+        argument="GroupModel",
+        foreign_keys=[default_group_id],
     )
     posts = relationship(
         argument="PostModel",
@@ -69,6 +80,27 @@ class UserModel(Base):
         back_populates="user",
     )
     created_invitation_codes = relationship(
-        argument="InvitationCode",
+        argument="InvitationModel",
         back_populates="creator",
+    )
+    refresh_tokens = relationship(
+        argument="RefreshTokenModel",
+        back_populates="user",
+    )
+    user_points = relationship(
+        argument="UserPointsModel",
+        back_populates="user",
+        uselist=False,
+    )
+    point_transactions = relationship(
+        argument="PointTransactionModel",
+        back_populates="user",
+    )
+    group_memberships = relationship(
+        argument="GroupMembersModel",
+        back_populates="user",
+    )
+    challenge_winners = relationship(
+        argument="ChallengeWinnerModel",
+        back_populates="user",
     )
