@@ -27,7 +27,7 @@ class GroupMembersModel(Base):
         index=True,
     )
     role: Mapped[str] = mapped_column(
-        Enum("ADMIN", "MEMBER", name="group_role"),
+        Enum("ADMIN", "MEMBER", "MANAGER", name="group_role"),
         nullable=False,
         default="MEMBER",
     )
