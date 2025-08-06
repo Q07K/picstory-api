@@ -6,6 +6,6 @@ from enum import Enum
 class GroupRole(str, Enum):
     """Group member role enum"""
 
-    ADMIN = "admin"
-    MANAGER = "manager"
-    MEMBER = "member"
+    ADMIN = "ADMIN"
+    MANAGER = "MANAGER"
+    MEMBER = "MEMBER"
