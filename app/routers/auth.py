@@ -156,7 +156,7 @@ async def login_json(
 
 
 @router.post(
-    path="/refresh-token",
+    path="/refresh",
     response_model=SuccessResponse[Token],
     summary="Refresh access token",
     responses={
