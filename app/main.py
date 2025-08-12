@@ -4,7 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import settings
 from app.exception_handlert import custom_exception_response
-from app.routers import auth
+from app.routers import auth, invitation_admin, invitations
 
 app = FastAPI(
     title=settings.project_name,
@@ -14,7 +14,7 @@ app = FastAPI(
 
 # CORS 설정
 app.add_middleware(
-    CORSMiddleware,
+    middleware_class=CORSMiddleware,
     allow_origins=settings.backend_cors_origins,
     allow_credentials=True,
     allow_methods=["*"],
@@ -29,6 +29,8 @@ app.add_exception_handler(
 
 # 라우터 등록
 app.include_router(router=auth.router)
+app.include_router(router=invitation_admin.router)
+app.include_router(router=invitations.router)
 
 
 def main() -> None:
