@@ -41,22 +41,9 @@ class RefreshTokenModel(Base):
         nullable=False,
         default=False,
     )
-    device_info: Mapped[str | None] = mapped_column(
-        String(length=255),
-        nullable=True,
-    )
-    ip_address: Mapped[str | None] = mapped_column(
-        String(length=45),
-        nullable=True,
-    )
     created_at: Mapped[TIMESTAMP] = mapped_column(
         TIMESTAMP(timezone=True),
         server_default=func.now(),
-    )
-    updated_at: Mapped[TIMESTAMP] = mapped_column(
-        TIMESTAMP(timezone=True),
-        server_default=func.now(),
-        onupdate=func.now(),
     )
 
     # Relationships
