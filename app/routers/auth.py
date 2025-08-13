@@ -5,8 +5,10 @@ from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 
 from app.core.security import get_password_hash
+from app.crud.refresh_token import create_refresh_token
 from app.crud.users import create_user, get_user_by_email
 from app.database.database import get_db
+from app.models.refresh_tokens import RefreshTokenModel
 from app.models.users import UserModel
 from app.schemas.auth import LoginRequest, RefreshTokenRequest, Token
 from app.schemas.base_response import SuccessResponse
@@ -146,7 +148,16 @@ async def login_json(
             headers={"WWW-Authenticate": "Bearer"},
         )
 
-    tokens = create_tokens(user=user)
+    tokens, expires_at = create_tokens(user=user)
+
+    create_refresh_token(
+        session=session,
+        model=RefreshTokenModel(
+            token=tokens.refresh_token,
+            user_id=user.id,
+            expires_at=expires_at,
+        ),
+    )
 
     return SuccessResponse[Token](
         code="user.logged_in",
