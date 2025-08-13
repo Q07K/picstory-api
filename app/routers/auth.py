@@ -5,7 +5,7 @@ from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 
 from app.core.security import get_password_hash
-from app.crud.crud_users import create_user, get_user_by_email
+from app.crud.users import create_user, get_user_by_email
 from app.database.database import get_db
 from app.models.users import UserModel
 from app.schemas.auth import LoginRequest, RefreshTokenRequest, Token

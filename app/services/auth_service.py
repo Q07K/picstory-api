@@ -9,7 +9,7 @@ from app.core.security import (
     verify_password,
     verify_token,
 )
-from app.crud.crud_users import get_user_by_email
+from app.crud.users import get_user_by_email
 from app.models.users import UserModel
 from app.schemas.auth import Token
 
