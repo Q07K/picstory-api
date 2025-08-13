@@ -1,3 +1,4 @@
+import datetime
 from datetime import timedelta
 
 from sqlalchemy.orm import Session
@@ -104,8 +105,12 @@ def create_tokens(user: UserModel) -> Token:
         expires_delta=refresh_token_expires,
     )
 
-    return Token(
+    tokens = Token(
         access_token=access_token,
         refresh_token=refresh_token,
         token_type="bearer",
     )
+    expires_at = (
+        datetime.datetime.now(datetime.timezone.utc) + refresh_token_expires
+    )
+    return tokens, expires_at
